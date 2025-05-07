@@ -1,29 +1,17 @@
 name: Account Sync
-on:
-schedule:
-  - cron: '0 */6 * * *'
-jobs:
-  sync:
-  runs-on: ubuntu-latest
-  steps:
-    uses: actions/checkout@v3
-
-on:
+  on:
   schedule:
-    - cron: '0 */6 * * *'
-  workflow_dispatch:
+      - cron: '0 */6 * * *'  # 注意这里用单引号包裹
+  workflow_dispatch:        # 允许手动触发
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    
+    timeout-minutes: 30     # 设置超时时间
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
-      - name: Install dependencies
-        run: pip install pytesseract
 
       - name: Set up Python
         uses: actions/setup-python@v4
