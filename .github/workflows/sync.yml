@@ -1,36 +1,40 @@
 name: Account Sync
 on:
   schedule:
-    - cron: '0 */6 * * *'  # 每6小时运行一次
+    - cron: '0 */6 * * *'  # 每6小时运行一次（UTC时间）
   workflow_dispatch:        # 允许手动触发
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 30     # 设置超时时间
+
     steps:
-      - uses: actions/checkout@v3
-        
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-          
+
       - name: Install Tesseract
         run: |
           sudo apt-get update
           sudo apt-get install -y tesseract-ocr tesseract-ocr-chi-sim
-          
+
       - name: Install dependencies
         run: |
-          pip install pillow pytesseract requests
-          
+          python -m pip install --upgrade pip
+          pip install pillow pytesseract requests beautifulsoup4
+
       - name: Run OCR script
         run: python ocr.py
-        
+
       - name: Commit changes
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add account.txt
-          git commit -m "Auto update account info" || echo "No changes"
+          git commit -m "Auto update account info" || echo "No changes to commit"
           git push
