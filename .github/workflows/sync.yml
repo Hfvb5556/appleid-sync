@@ -1,5 +1,5 @@
 name: Account Sync
-  on:
+on:
   schedule:
       - cron: '0 */6 * * *'  # 注意这里用单引号包裹
   workflow_dispatch:        # 允许手动触发
